@@ -49,6 +49,21 @@ public class ThreadStateExample {
 		}
 		System.out.println("t0 is still running");
 		
+		
+		Thread t3=new Thread(){
+			public void run(){
+				
+				System.out.println("t0 state in t3 is "+ t0.getState());
+				for(int i=0; i<1000; i++){
+				}
+				System.out.println("t3 is running");
+			}
+		};
+		// 当前线程yield后不一定会立刻将运行时间交给其他Thread，可能还会继续运行。因为yield只是给scheduler一个hint而已。
+		t3.start();
+		Thread.yield();
+		System.out.println("t0 is still running");
+		
 	}
 
 }
