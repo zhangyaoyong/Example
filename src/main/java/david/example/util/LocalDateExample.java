@@ -14,7 +14,6 @@ public class LocalDateExample {
 		
 		Instant instant = localToday.atZone(ZoneId.systemDefault()).toInstant();
 	    Date dateFromOld = Date.from(instant);
-	    
 	    System.out.println(dateFromOld);
 		
 		
