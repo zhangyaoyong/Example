@@ -3,6 +3,7 @@ package david.example.lang;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class Object {
@@ -48,6 +49,10 @@ public class Object {
 		System.out.println("after wait in main");
 	}
 	
+	/**
+	 * notify和wait都需要先获得lock
+	 */
+	
 	@Test
 	public void test_notAccquireLockBeforeWait()
 	{
@@ -67,7 +72,46 @@ public class Object {
 		catch(IllegalMonitorStateException e)
 		{
 		}
+	}
+	
+	
+	@Test
+	public void test_waitInSelf()
+	{
+		class Inner
+		{
+			public synchronized void waitInSelf()
+			{
+				try {
+					System.out.println("waiting");
+					wait();
+				} catch (InterruptedException e) {
+					
+				}
+				System.out.println("after waiting");
+			}
+		}
 		
+		final Inner i=new Inner();
+		
+		Thread t=new Thread(){
+			public void run(){
+				
+				i.waitInSelf();
+			}
+		};
+		
+	     t.start();
+	     
+	     try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+		}
+	     synchronized(i)
+	     {
+	    	 i.notify();
+	     }
+	     
 	}
 
 }
